@@ -1,0 +1,4 @@
+{
+  "root": "lib/__tests__/invalid_config/empty_config_rules",
+  "rules": []
+}

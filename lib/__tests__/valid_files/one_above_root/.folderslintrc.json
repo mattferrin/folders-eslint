@@ -1,0 +1,4 @@
+{
+  "root": "lib/__tests__/valid_files/one_above_root/root",
+  "rules": ["**/b.cs"]
+}
