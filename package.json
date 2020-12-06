@@ -6,6 +6,7 @@
   "author": "ferrin",
   "license": "MIT",
   "dependencies": {
+    "minimist": "^1.2.5",
     "neon-cli": "^0.5.3"
   },
   "scripts": {

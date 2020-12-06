@@ -19,7 +19,7 @@ fn to_unix_string(name: String) -> String {
     name.replace("\\", "/")
 }
 
-fn enforce_config(mut cx: FunctionContext) -> JsResult<JsString> {
+fn enforce_config(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     let config_file = match cx.argument_opt(0) {
         None => ".folderslintrc.json".to_owned(),
         Some(arg) => arg.downcast::<JsString>().or_throw(&mut cx)?.value(),
@@ -49,7 +49,9 @@ fn enforce_config(mut cx: FunctionContext) -> JsResult<JsString> {
         ));
     }
 
-    for entry in WalkDir::new(config_values.root)
+    let root = config_values.root.clone();
+    let root_1 = &root.clone();
+    for entry in WalkDir::new(root)
         .follow_links(true)
         .into_iter()
         .filter_map(move |e| e.ok())
@@ -58,7 +60,9 @@ fn enforce_config(mut cx: FunctionContext) -> JsResult<JsString> {
         let entry_1 = entry.clone();
         let satisfies_rule = config_values.rules.clone().into_iter().any(move |rule| {
             let path = format!("{}", entry.path().display());
-            Pattern::new(&rule).unwrap().matches(&path)
+            let extended_rule = format!("{}", Path::new(root_1).join(rule).display());
+            Pattern::new(&extended_rule).unwrap().matches(&path)
+            // Pattern::new(&rule).unwrap().matches(&path)
         });
         if !satisfies_rule {
             panic!(format!(
@@ -67,7 +71,8 @@ fn enforce_config(mut cx: FunctionContext) -> JsResult<JsString> {
             ));
         }
     }
-    Ok(cx.string("No rule violations detected"))
+    println!("No rule violations detected");
+    Ok(cx.undefined())
 }
 
 register_module!(mut cx, {
