@@ -68,7 +68,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "697c714f50560202b1f4e2e09cd50a421881c83e9025db75d15f276616f04f40"
 
 [[package]]
-name = "folders-eslint"
+name = "folders-lint"
 version = "0.1.0"
 dependencies = [
  "glob",
