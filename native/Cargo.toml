@@ -1,7 +1,7 @@
 [package]
 name = "folders-lint"
 version = "0.1.0"
-authors = ["ferrin"]
+authors = ["Matt Ferrin"]
 license = "MIT"
 build = "build.rs"
 edition = "2018"
