@@ -1,4 +1,4 @@
-use glob::Pattern;
+use glob::{MatchOptions, Pattern};
 use neon::prelude::*;
 use serde::Deserialize;
 use std::fs::File;
@@ -60,9 +60,17 @@ fn enforce_config(mut cx: FunctionContext) -> JsResult<JsUndefined> {
         let entry_1 = entry.clone();
         let satisfies_rule = config_values.rules.clone().into_iter().any(move |rule| {
             let path = format!("{}", entry.path().display());
-            let extended_rule = format!("{}", Path::new(root_1).join(rule).display());
-            Pattern::new(&extended_rule).unwrap().matches(&path)
-            // Pattern::new(&rule).unwrap().matches(&path)
+            let extended_rule = format!("{}/{}", root_1, rule);
+
+            let is_satisfied = Pattern::new(&extended_rule).unwrap().matches_with(
+                &to_unix_string(path),
+                MatchOptions {
+                    case_sensitive: true,
+                    require_literal_leading_dot: false,
+                    require_literal_separator: true, // because default false does not match standard glob behavior
+                },
+            );
+            is_satisfied
         });
         if !satisfies_rule {
             panic!(format!(
