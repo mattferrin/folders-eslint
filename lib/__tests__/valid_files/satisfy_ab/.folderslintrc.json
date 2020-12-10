@@ -1,4 +1,0 @@
-{
-  "root": "lib/__tests__/valid_files/satisfy_ab/root",
-  "rules": ["**/a.cs", "**/b.cs"]
-}

@@ -1,4 +1,0 @@
-{
-  "root": "lib/__tests__/invalid_files/violate_c_of_ab/root",
-  "rules": ["**/a.rs", "**/b.rs"]
-}

@@ -1,0 +1,6 @@
+{
+  "root": "lib/__tests__/glob_invalid_files/violate_child_of_parent/root",
+  "rules": [
+    "lib/__tests__/glob_invalid_files/violate_child_of_parent/root/package.json"
+  ]
+}

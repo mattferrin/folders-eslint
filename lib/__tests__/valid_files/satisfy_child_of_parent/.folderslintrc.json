@@ -1,4 +1,0 @@
-{
-  "root": "lib/__tests__/valid_files/satisfy_child_of_parent/root",
-  "rules": ["nested/package.json"]
-}

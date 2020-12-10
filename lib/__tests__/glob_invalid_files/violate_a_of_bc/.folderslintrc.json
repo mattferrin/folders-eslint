@@ -1,0 +1,4 @@
+{
+  "root": "lib/__tests__/glob_invalid_files/violate_a_of_bc/root",
+  "rules": ["**/b.rs", "**/c.rs"]
+}

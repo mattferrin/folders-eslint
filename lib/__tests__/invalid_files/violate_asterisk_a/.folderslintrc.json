@@ -1,4 +1,0 @@
-{
-  "root": "lib/__tests__/invalid_files/violate_asterisk_a/root",
-  "rules": ["*/c.rs"]
-}
