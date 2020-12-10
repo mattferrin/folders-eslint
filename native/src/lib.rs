@@ -14,7 +14,8 @@ struct ConfigFile {
 }
 
 /**
- * Simplifies tests by displaying errors uniformly. Used cosmetically, not functionally.
+ * Simplifies tests by displaying errors uniformly.
+ * Also using to convert path for regex matching.
  */
 fn to_unix_string(name: String) -> String {
     name.replace("\\", "/")
@@ -66,8 +67,9 @@ fn enforce_config(mut cx: FunctionContext) -> JsResult<JsUndefined> {
                 // regex rule
                 Some('/') => {
                     let root_slash = format!("{}{}", root_1, "/");
-                    let relative_path = path.trim_start_matches(&root_slash);
-                    let regex_rule = rule.trim_start_matches("/").trim_end_matches("/"); //"^nested/package\\.json$"; //  str::replace(&rule, r"\", r"");
+                    let unix_path = to_unix_string(path);
+                    let relative_path = unix_path.trim_start_matches(&root_slash);
+                    let regex_rule = rule.trim_start_matches("/").trim_end_matches("/");
                     let regex = Regex::new(&regex_rule);
                     match regex {
                         Ok(ok) => ok.is_match(relative_path),
