@@ -1,0 +1,4 @@
+{
+  "root": "lib/__tests__/regex_invalid_files/violate_child_of_parent/root",
+  "rules": ["/^package\\.json$/"]
+}

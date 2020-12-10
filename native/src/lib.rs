@@ -1,5 +1,6 @@
 use glob::{MatchOptions, Pattern};
 use neon::prelude::*;
+use regex::Regex;
 use serde::Deserialize;
 use std::fs::File;
 use std::io::BufReader;
@@ -60,17 +61,37 @@ fn enforce_config(mut cx: FunctionContext) -> JsResult<JsUndefined> {
         let entry_1 = entry.clone();
         let satisfies_rule = config_values.rules.clone().into_iter().any(move |rule| {
             let path = format!("{}", entry.path().display());
-            let extended_rule = format!("{}/{}", root_1, rule);
 
-            let is_satisfied = Pattern::new(&extended_rule).unwrap().matches_with(
-                &to_unix_string(path),
-                MatchOptions {
-                    case_sensitive: true,
-                    require_literal_leading_dot: false,
-                    require_literal_separator: true, // because default false does not match standard glob behavior
-                },
-            );
-            is_satisfied
+            match rule.chars().next() {
+                // regex rule
+                Some('/') => {
+                    let root_slash = format!("{}{}", root_1, "/");
+                    let relative_path = path.trim_start_matches(&root_slash);
+                    let regex_rule = rule.trim_start_matches("/").trim_end_matches("/"); //"^nested/package\\.json$"; //  str::replace(&rule, r"\", r"");
+                    let regex = Regex::new(&regex_rule);
+                    match regex {
+                        Ok(ok) => ok.is_match(relative_path),
+                        Err(_) => panic!(format!("Invalid regex rule `{}`", rule)),
+                    }
+                }
+                // glob rule
+                Some(_) => {
+                    let extended_rule = format!("{}/{}", root_1, rule);
+
+                    let is_satisfied = Pattern::new(&extended_rule).unwrap().matches_with(
+                        &to_unix_string(path),
+                        MatchOptions {
+                            case_sensitive: true,
+                            require_literal_leading_dot: false,
+                            require_literal_separator: true, // because default false does not match standard glob behavior
+                        },
+                    );
+                    is_satisfied
+                }
+                None => {
+                    panic!("A rule cannot be empty")
+                }
+            }
         });
         if !satisfies_rule {
             panic!(format!(

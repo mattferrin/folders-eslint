@@ -74,6 +74,7 @@ dependencies = [
  "glob",
  "neon",
  "neon-build",
+ "regex",
  "serde",
  "serde_json",
  "walkdir",
